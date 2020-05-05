@@ -3,6 +3,8 @@ from setuptools import setup
 setup(
   author='Michał Zając',
   author_email='michal.t.zajac@gmail.com',
+  url='https://github.com/michalzc/troveget',
+  license='The Unlicense',
   name="TroveGet",
   version="0.1",
   packages=["troveget"],
