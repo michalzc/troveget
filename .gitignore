@@ -2,3 +2,4 @@
 .python-version
 TroveGet.egg-info/
 *.pyc
+.eggs/
