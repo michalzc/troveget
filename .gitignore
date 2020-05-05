@@ -3,3 +3,4 @@
 TroveGet.egg-info/
 *.pyc
 .eggs/
+dist/

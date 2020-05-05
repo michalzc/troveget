@@ -1,6 +1,8 @@
 from setuptools import setup
 
 setup(
+  author='Michał Zając',
+  author_email='michal.t.zajac@gmail.com',
   name="TroveGet",
   version="0.1",
   packages=["troveget"],
@@ -9,10 +11,6 @@ setup(
     'beautifulsoup4==4.9.0',
     'docopt-ng==0.7.2',
     'tqdm==4.46.0'
-  ],
-  test_suit='nose.collector',
-  tests_require=[
-    'nose'
   ],
   entry_points='''
     [console_scripts]
