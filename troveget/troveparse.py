@@ -20,10 +20,14 @@ def find_links(html_string):
 
 
 
-    logger.debug("Found dir links")
-    for l in directory_links:
-        logger.debug(l)
-    logger.debug("file links")
-    for l in file_links:
-        logger.debug(l)
+    if directory_links:
+        logger.debug("Directory links:")
+        for l in directory_links:
+            logger.debug("\t- %s", l)
+
+    if file_links:
+        logger.debug("File links:")
+        for l in file_links:
+            logger.debug("\t- %s", l)
+
     return(directory_links, file_links)
