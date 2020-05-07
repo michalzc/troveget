@@ -1,7 +1,11 @@
 """trove-get
 
 Usage:
-    trove-get <trove-url> [<output-dir>]
+    trove-get [-n | --no-follow] <trove-url> [<output-dir>]
+
+Options:
+    -h --help       Show this screen
+    -n --no-follow  Do not step down into directories
 """
 
 import os
@@ -23,12 +27,12 @@ logger = getLogger('trove-get')
     
 
 def check_args(arguments):
-    out_dir = arguments['<output-dir>'] or '.'
+    out_dir = arguments.get('<output-dir>') or '.'
     if os.path.exists(out_dir) and not os.path.isdir(out_dir):
         logger.error("%s exist and is not a directory", out_dir)
         sys.exit(1)
 
-    url = arguments['<trove-url>']
+    url = arguments.get('<trove-url>')
     if not url.startswith('https://'):
         url = 'https://' + url
     if url.endswith('/index.html'):
@@ -39,12 +43,14 @@ def check_args(arguments):
     if not url.endswith('/'):
         url = url + '/'
 
-    out_dir = arguments['<output-dir>'] or get_dir_from_url(url)
+    out_dir = arguments.get('<output-dir>') or get_dir_from_url(url)
     if os.path.exists(out_dir) and not os.path.isdir(out_dir):
         logger.error("%s exist and is not a directory", out_dir)
-        sys.exit(1)        
+        sys.exit(1)
 
-    return (url, out_dir)
+    no_follow = arguments.get('--no-follow') or False
+
+    return (url, out_dir, no_follow)
 
 def check_directory(out_dir):
     if not os.path.exists(out_dir):
@@ -54,7 +60,7 @@ def check_directory(out_dir):
         sys.exit(1)    
 
 
-def run(url, out_dir):
+def run(url, out_dir, no_follow):
     logger.info("Processing %s page, download dir %s", url, out_dir)
     check_directory(out_dir)
     page_source = download_page(url)
@@ -64,10 +70,10 @@ def run(url, out_dir):
             file_url = posixpath.join(url, fl)
             download_file(file_url, out_dir)
 
-        for pl in page_links:
+        for pl in page_links and not no_follow:
             page_url = posixpath.join(url, pl)
             page_out_dir = os.path.join(out_dir, get_dir_from_url(page_url))
-            run(page_url, page_out_dir)
+            run(page_url, page_out_dir, no_follow)
 
     else:
         logger.warn("No data for %s, skipping", url)
@@ -76,5 +82,5 @@ def run(url, out_dir):
 
 def get():
     arguments = docopt(__doc__, version='trove-get 0.1')
-    url, out_dir = check_args(arguments)
-    run(url, out_dir)
+    url, out_dir, no_follow = check_args(arguments)
+    run(url, out_dir, no_follow)
