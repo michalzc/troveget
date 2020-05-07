@@ -70,10 +70,11 @@ def run(url, out_dir, no_follow):
             file_url = posixpath.join(url, fl)
             download_file(file_url, out_dir)
 
-        for pl in page_links and not no_follow:
-            page_url = posixpath.join(url, pl)
-            page_out_dir = os.path.join(out_dir, get_dir_from_url(page_url))
-            run(page_url, page_out_dir, no_follow)
+        if not no_follow:
+            for pl in page_links:
+                page_url = posixpath.join(url, pl)
+                page_out_dir = os.path.join(out_dir, get_dir_from_url(page_url))
+                run(page_url, page_out_dir, no_follow)
 
     else:
         logger.warn("No data for %s, skipping", url)
